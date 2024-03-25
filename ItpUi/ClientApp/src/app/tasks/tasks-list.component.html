@@ -1,0 +1,56 @@
+<h1 id="tableLabel"> Tasks manager </h1>
+
+<p *ngIf="!tasks"><em>Loading...</em></p>
+
+<div style="float: right">
+  <p>
+    <button mat-raised-button [disabled]="!loaded" (click)="openCreateTaskDialog()">create task</button>
+  </p>
+</div>
+<div>
+  <mat-form-field>
+    <mat-label>Project</mat-label>       
+    <mat-select [(value)]="selectedProject">
+      <mat-option (click)="onProjectUnselected()">None</mat-option>
+      <mat-option [option]="project.projectId" 
+      [value]="project.id" *ngFor="let project of projects" 
+      (click)="onProjectSelected()">{{project.projectName}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  
+  <mat-form-field>
+    <mat-label>Created date</mat-label>
+    <input editable="false" matInput [matDatepicker]="datepicker" (dateInput)="onProjectDateChanged($event.value)" [value]="dateFilter">        
+    <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker></mat-datepicker>    
+  </mat-form-field>
+</div>
+  
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="tasks">
+  <thead>
+    <tr>
+      <th>Position</th>      
+      <th>Project Name</th>      
+      <th>Time</th>      
+      <th>Task Name</th>      
+      <th>Start Time</th>      
+      <th>End Time</th>      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>{{ task.position }}</td>    
+      <td>{{ task.projectName }}</td>    
+      <td>{{ formatTime(task.time) }}</td>    
+      <td>        
+        <a class="nav-link text-dark" [routerLink]="['/task',task.taskId.toString()]">{{ task.taskName }}</a>               
+      </td>    
+      <td>{{ task.startTime | date:'HH:mm' }}</td>    
+      <td>{{ task.endTime | date:'HH:mm' }}</td>    
+    </tr>
+  </tbody>
+</table> 
+
+<div style="text-align: right;">
+  total time: <b>{{ formatTime(total) }}</b> 
+</div>
